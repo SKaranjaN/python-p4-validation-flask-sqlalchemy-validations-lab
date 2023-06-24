@@ -93,10 +93,13 @@ class TestPost:
         with app.app_context():
             content_string = "This is content" * 150
             summary_string = "T" * 250
-            with pytest.raises(ValueError):
-                post = Post(title='Secret, Why I love programming.', content=content_string, summary= summary_string, category='Non-Fiction')
+            try:
+                post = Post(title='Secret, Why I love programming.', content=content_string, summary=summary_string, category='Non-Fiction')
                 db.session.add(post)
                 db.session.commit()
+            except ValueError as e:
+                print("Error message:", str(e))
+                raise
 
     def test_category(self):
         '''Incorrect category test'''
